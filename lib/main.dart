@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = GeneratorPage();
         break;
       case 1:
-        page = Placeholder();
+        page = FavoritesListPage();
         break;
       default:
         throw UnimplementedError("no widget for $selectedIndex");
@@ -78,7 +78,8 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           SafeArea(
               child: NavigationRail(
-            extended: constraints.maxWidth >= 600, // like media query -> check screen size.
+            extended: constraints.maxWidth >=
+                600, // like media query -> check screen size.
             destinations: [
               NavigationRailDestination(
                   icon: Icon(Icons.home), label: Text("Home")),
@@ -141,6 +142,32 @@ class GeneratorPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class FavoritesListPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    print(appState.favorites);
+    if (appState.favorites.isEmpty) {
+      return Center(
+        child: Text("No favorites yet."),
+      );
+    }
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Text("You have ${appState.favorites.length} favolites."),
+        ),
+        for (var pair in appState.favorites)
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text(pair.asPascalCase),
+          )
+      ],
     );
   }
 }
